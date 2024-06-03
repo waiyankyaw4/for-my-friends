@@ -1,4 +1,5 @@
 <?php
+session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 require 'db.php';
@@ -9,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $sql = "SELECT password FROM users WHERE username = ?";
+    $sql = "SELECT id, password FROM users WHERE username = ?";
     $stmt = $conn->prepare($sql);
     if (!$stmt) {
         $loginMessage = 'Prepare failed: (' . $conn->errno . ') ' . $conn->error;
@@ -19,11 +20,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->store_result();
 
         if ($stmt->num_rows > 0) {
-            $stmt->bind_result($hashedPassword);
+            $stmt->bind_result($userId, $hashedPassword);
             $stmt->fetch();
 
             if (password_verify($password, $hashedPassword)) {
-                header ("location: profile.php");
+                // Store username and user ID in the session
+                $_SESSION['username'] = $username;
+                $_SESSION['user_id'] = $userId;
+                header("Location: profile.php");
+                exit();
             } else {
                 $loginMessage = 'Invalid username or password!';
             }

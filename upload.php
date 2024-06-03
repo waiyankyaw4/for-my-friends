@@ -1,4 +1,5 @@
 <?php
+session_start(); // Start the session
 
 // Database connection
 try {
@@ -48,21 +49,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["submit"])) {
         if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
             // File uploaded successfully, now insert the file name into the database
             $filename = basename($_FILES["fileToUpload"]["name"]);
-            $userId = 6; // Replace with the actual user ID for testing
 
-            try {
-                // Prepare SQL statement
-                $stmt = $pdo->prepare("UPDATE users SET profile_photo = ? WHERE id = ?");
-                if ($stmt->execute([$filename, $userId])) {
-                    echo "Profile photo updated successfully.<br>";
-                    // Redirect to profile page
-                    header("Location: profile.php?img=" . urlencode($filename));
-                    exit();
-                } else {
-                    echo "Failed to update profile photo.<br>";
+            // Check if the user is logged in by verifying the session variable
+            if (isset($_SESSION['username'])) {
+                $username = $_SESSION['username'];
+
+                try {
+                    // Update the profile_photo column in the users table based on the username
+                    $stmt = $pdo->prepare("UPDATE users SET profile_photo = ? WHERE username = ?");
+                    if ($stmt->execute([$filename, $username])) {
+                        echo "Profile photo updated successfully.<br>";
+                        // Redirect to profile page
+                        header("Location: profile.php?img=" . urlencode($filename));
+                        exit();
+                    } else {
+                        echo "Failed to update profile photo.<br>";
+                    }
+                } catch (PDOException $e) {
+                    echo "Database error: " . $e->getMessage();
                 }
-            } catch (PDOException $e) {
-                echo "Database error: " . $e->getMessage();
+            } else {
+                echo "No user is logged in.<br>";
             }
         } else {
             echo "Sorry, there was an error uploading your file.<br>";
