@@ -61,6 +61,7 @@
             <th>Id</th>
             <th>Username</th>
             <th>Email</th>
+            <th>Photo</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -80,23 +81,35 @@
         }
 
         // Handle update request
-  // Handle update request
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update'])) {
             $id = $_POST['id'];
             $username = $_POST['username'];
             $email = $_POST['email'];
             $password = $_POST['password'];
-  // Password validation
-
-
-            $sql = "UPDATE users SET username='$username', email='$email', password='$password' WHERE id=$id";
+            $profile_photo = $_FILES['profile_photo']['name'];
+            
+            // Upload the photo
+            if (!empty($profile_photo)) {
+                $target_dir = "uploads/";
+                $target_file = $target_dir . basename($profile_photo);
+                move_uploaded_file($_FILES['profile_photo']['tmp_name'], $target_file);
+            } else {
+                $sql = "SELECT profile_photo FROM users WHERE id = $id";
+                $result = $conn->query($sql);
+                if ($result->num_rows > 0) {
+                    $row = $result->fetch_assoc();
+                    $profile_photo = $row['profile_photo'];
+                }
+            }
+            
+            // Update the user
+            $sql = "UPDATE users SET username='$username', email='$email', password='$password', profile_photo='$profile_photo' WHERE id=$id";
             if ($conn->query($sql) === TRUE) {
                 echo "<p>Record updated successfully.</p>";
             } else {
                 echo "Error updating record: " . $conn->error;
             }
         }
-
 
         // Fetch and display data
         $sql = "SELECT * FROM users";
@@ -108,13 +121,20 @@
                 echo "<td>" . htmlspecialchars($row['username']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['email']) . "</td>";
                 echo "<td>";
-                echo "<button onclick='showUpdateModal(" . $row['id'] . ", \"" . htmlspecialchars($row['username']) . "\", \"" . htmlspecialchars($row['email']) . "\", \"" . htmlspecialchars($row['password']) . "\")'>Update</button>";
+                if (!empty($row['profile_photo'])) {
+                    echo "<img src='uploads/" . htmlspecialchars($row['profile_photo']) . "' alt='Profile Photo' style='width:50px;height:50px;'>";
+                } else {
+                    echo "No photo";
+                }
+                echo "</td>";
+                echo "<td>";
+                echo "<button onclick='showUpdateModal(" . $row['id'] . ", \"" . htmlspecialchars($row['username']) . "\", \"" . htmlspecialchars($row['email']) . "\", \"" . htmlspecialchars($row['profile_photo']) . "\")'>Update</button>";
                 echo "<button onclick='showDeleteModal(" . $row['id'] . ")'>Delete</button>";
                 echo "</td>";
                 echo "</tr>";
             }
         } else {
-            echo "<tr><td colspan='4'>No data found</td></tr>";
+            echo "<tr><td colspan='5'>No data found</td></tr>";
         }
         $conn->close();
         ?>
@@ -139,7 +159,7 @@
     <div class="modal-content">
         <span class="close" onclick="hideUpdateModal()">&times;</span>
         <h2>Update User</h2>
-        <form action="" method="post">
+        <form id="updateForm" action="" method="post" enctype="multipart/form-data">
             <input type="hidden" name="id" id="updateId">
             <label for="updateUsername">Username:</label><br>
             <input type="text" id="updateUsername" name="username"><br>
@@ -147,14 +167,13 @@
             <input type="email" id="updateEmail" name="email"><br>
             <label for="updatePassword">Password:</label><br>
             <input type="text" id="updatePassword" name="password"><br>
+            <label for="updatePhoto">Profile Photo:</label><br>
+            <input type="file" id="updatePhoto" name="profile_photo"><br>
             <input type="submit" name="update" value="Update">
         </form>
- 
-
     </div>
 </div>
 <button type="button" class="btn btn-success"><a href="index.php"> Log out</a> </button>
- 
 
 <script>
 // Modal handling
@@ -170,11 +189,11 @@ function hideDeleteModal() {
     deleteModal.style.display = "none";
 }
 
-function showUpdateModal(id, username, email, password) {
+function showUpdateModal(id, username, email, profile_photo) {
     document.getElementById("updateId").value = id;
     document.getElementById("updateUsername").value = username;
     document.getElementById("updateEmail").value = email;
-    document.getElementById("updatePassword").value = password;
+    document.getElementById("updatePassword").value = ""; // Optionally clear password for security
     updateModal.style.display = "block";
 }
 
