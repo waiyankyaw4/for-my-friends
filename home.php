@@ -61,6 +61,7 @@
             <th>Id</th>
             <th>Username</th>
             <th>Email</th>
+<th>Password</th>
             <th>Photo</th>
             <th>Actions</th>
         </tr>
@@ -86,6 +87,7 @@
             $username = $_POST['username'];
             $email = $_POST['email'];
             $password = $_POST['password'];
+$hashed_password = password_hash($password, PASSWORD_DEFAULT);
             $profile_photo = $_FILES['profile_photo']['name'];
             
             // Upload the photo
@@ -94,7 +96,7 @@
                 $target_file = $target_dir . basename($profile_photo);
                 move_uploaded_file($_FILES['profile_photo']['tmp_name'], $target_file);
             } else {
-                $sql = "SELECT profile_photo FROM users WHERE id = $id";
+                $sql = "SELECT profile_photo FROM users WHERE username= $username";
                 $result = $conn->query($sql);
                 if ($result->num_rows > 0) {
                     $row = $result->fetch_assoc();
@@ -103,7 +105,7 @@
             }
             
             // Update the user
-            $sql = "UPDATE users SET username='$username', email='$email', password='$password', profile_photo='$profile_photo' WHERE id=$id";
+            $sql = "UPDATE users SET username='$username', email='$email', password='$hashed_password', profile_photo='$profile_photo' WHERE id=$id";
             if ($conn->query($sql) === TRUE) {
                 echo "<p>Record updated successfully.</p>";
             } else {
@@ -120,6 +122,8 @@
                 echo "<td>" . htmlspecialchars($row['id']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['username']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['email']) . "</td>";
+	  echo "<td>" . htmlspecialchars($row['password']) . "</td>";
+
                 echo "<td>";
                 if (!empty($row['profile_photo'])) {
                     echo "<img src='uploads/" . htmlspecialchars($row['profile_photo']) . "' alt='Profile Photo' style='width:50px;height:50px;'>";
@@ -128,7 +132,7 @@
                 }
                 echo "</td>";
                 echo "<td>";
-                echo "<button onclick='showUpdateModal(" . $row['id'] . ", \"" . htmlspecialchars($row['username']) . "\", \"" . htmlspecialchars($row['email']) . "\", \"" . htmlspecialchars($row['profile_photo']) . "\")'>Update</button>";
+                echo "<button onclick='showUpdateModal(" . $row['id'] . ", \"" . htmlspecialchars($row['username']) . "\", \"" . htmlspecialchars($row['email']) . "\", \"" . htmlspecialchars($row['password']) . "\",  \"" . htmlspecialchars($row['profile_photo']) . "\")'>Update</button>";
                 echo "<button onclick='showDeleteModal(" . $row['id'] . ")'>Delete</button>";
                 echo "</td>";
                 echo "</tr>";
@@ -190,11 +194,12 @@ function hideDeleteModal() {
     deleteModal.style.display = "none";
 }
 
-function showUpdateModal(id, username, email, profile_photo) {
+function showUpdateModal(id, username, email,password, profile_photo) {
     document.getElementById("updateId").value = id;
     document.getElementById("updateUsername").value = username;
     document.getElementById("updateEmail").value = email;
-    document.getElementById("updatePassword").value = ""; // Optionally clear password for security
+    document.getElementById("updatePassword").value = password; // Optionally clear password for security
+  
     updateModal.style.display = "block";
 }
 
