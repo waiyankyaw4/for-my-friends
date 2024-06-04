@@ -174,6 +174,7 @@
     </div>
 </div>
 <button type="button" class="btn btn-success"><a href="index.php"> Log out</a> </button>
+<button type="button" class="btn btn-success"><a href="profile.php"> Profile</a> </button>
 
 <script>
 // Modal handling

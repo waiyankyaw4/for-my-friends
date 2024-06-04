@@ -1,0 +1,86 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.profile-container {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+.profile-container h2 {
+    margin-top: 0;
+    color: #333333;
+}
+
+.profile-container img.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #dddddd;
+    margin-bottom: 10px;
+}
+
+.profile-container p {
+    color: #666666;
+    margin: 10px 0;
+}
+
+.profile-container h3 {
+    color: #333333;
+    margin-bottom: 10px;
+}
+
+.profile-container form {
+    margin-bottom: 20px;
+}
+
+.profile-container .file-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #333333;
+}
+
+.profile-container input[type="file"] {
+    margin-bottom: 10px;
+}
+
+.profile-container .upload-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.profile-container .upload-button:hover {
+    background-color: #45a049;
+}
+
+.profile-container .home-link {
+    display: block;
+    margin-top: 20px;
+    color: #4CAF50;
+    text-decoration: none;
+}
+
+.profile-container .home-link:hover {
+    text-decoration: underline;
+}
