@@ -15,7 +15,7 @@
             text-align: left;
         }
         th {
-            background-color: #f2f2f2;
+            background-color: #42d6d1;
         }
         /* Modal styles */
         .modal {
@@ -31,7 +31,7 @@
             padding-top: 60px;
         }
         .modal-content {
-            background-color: #fefefe;
+            background-color: lightblue;
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
@@ -43,6 +43,12 @@
             font-size: 28px;
             font-weight: bold;
         }
+
+.hidden-password {
+    color: transparent;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
         .close:hover,
         .close:focus {
             color: black;
@@ -53,6 +59,8 @@
     color: transparent;
     text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
 }
+
+
 
     </style>
 </head>

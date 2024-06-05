@@ -1,6 +1,8 @@
 body {
     font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
+    background: url('/oknrsr/for-my-friends/uploads/a.jpg') no-repeat center center fixed;
+
+    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -15,10 +17,10 @@ body {
 }
 
 .login-container, .register-container {
-    background-color: #fff;
+    background-color: rgb(238, 233, 233);
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px rgba(239, 236, 236, 0.1);
     width: 300px;
     text-align: center;
     margin: 10px;
@@ -60,7 +62,7 @@ button {
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #2e78c6;
 }
 
 p {
