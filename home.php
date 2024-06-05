@@ -49,6 +49,11 @@
             text-decoration: none;
             cursor: pointer;
         }
+.hidden-password {
+    color: transparent;
+    text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+
     </style>
 </head>
 <body>
@@ -61,7 +66,7 @@
             <th>Id</th>
             <th>Username</th>
             <th>Email</th>
-<th>Password</th>
+	<th>Password</th>
             <th>Photo</th>
             <th>Actions</th>
         </tr>
@@ -122,7 +127,10 @@ $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 echo "<td>" . htmlspecialchars($row['id']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['username']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['email']) . "</td>";
-	  echo "<td>" . htmlspecialchars($row['password']) . "</td>";
+   echo "<td class='hidden-password'>Hidden</td>";
+	  
+// echo "<td>" . htmlspecialchars($row['password']) . "</td>";
+
 
                 echo "<td>";
                 if (!empty($row['profile_photo'])) {
